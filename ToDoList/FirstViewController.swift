@@ -8,12 +8,31 @@
 
 import UIKit
 
+
+var todos: [String] = []
+
 class FirstViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var table: UITableView!
+
     
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if NSUserDefaults.standardUserDefaults().objectForKey("todos") != nil {
+        
+            todos = NSUserDefaults.standardUserDefaults().objectForKey("todos") as! [String]
+            
+        }
+        
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
-    var todos: [String] = ["Go Food Shopping", "Water the Plants", "Make Dinner", "Watch a Movie"]
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -32,22 +51,25 @@ class FirstViewController: UIViewController, UITableViewDelegate {
         
     }
     
-    
-    
-    
-    
-    
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
+            todos.removeAtIndex(indexPath.row)
+            
+            NSUserDefaults.standardUserDefaults().setObject(todos, forKey: "todos")
+            
+            table.reloadData()
+            
+        }
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
+    override func viewDidAppear(animated: Bool) {
+        
+        table.reloadData()
+        
     }
-
-
 }
 
